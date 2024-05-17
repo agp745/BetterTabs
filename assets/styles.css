@@ -10,16 +10,6 @@
   border-radius: 0.25rem;
 }
 
-.tabList {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-
-  padding: 0.25rem;
-}
-
 #__TABS_Body {
   position: fixed;
   left: 0;
@@ -33,6 +23,28 @@
   justify-content: center;
   align-items: center;
   gap: 2rem;
+}
 
-  font-size: 12rem;
+#__TABS_List {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+
+  max-width: 75%;
+
+  background-color: blanchedalmond;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+#__TABS_Tab {
+  text-align: center;
+  background-color: red;
+}
+
+#__TABS_Tab:hover {
+  background-color: blue;
+  cursor: pointer;
 }
