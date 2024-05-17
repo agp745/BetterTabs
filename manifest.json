@@ -10,9 +10,13 @@
     "128": "assets/arc-icon-128.png"
   },
 
+  "background": {
+    "service_worker": "src/background.js"
+  },
+
   "action": {
     "default_popup": "index.html"
   },
 
-  "permissions": ["tabs"]
+  "permissions": ["tabs", "activeTab", "scripting"]
 }
