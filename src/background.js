@@ -29,14 +29,17 @@ async function tabScript(tabList) {
 
 // API -> listens for message to send down HTML
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "loadScript") {
-    loadScript(sender, sendResponse);
+  switch (request.action) {
+    case "loadScript":
+      loadScript(sender, sendResponse);
+      break;
+    case "removeScript":
+      console.log("remove script called");
+      break;
+    default:
+      sendResponse({ success: false, error: "unknown message type" });
   }
-  if (request.action === "removeScript") {
-    console.log("yerr");
-  } else {
-    sendResponse({ success: false, error: "unknown message type" });
-  }
+
   return true;
 });
 
