@@ -8,14 +8,6 @@ async function getAllTabs() {
   return list.join("");
 }
 
-async function getTabId() {
-  const [tab] = await chrome.tabs.query({
-    active: true,
-    lastFocusedWindow: true,
-  });
-  return tab.id;
-}
-
 //Generates HTML
 async function tabScript(tabList) {
   const body = document.querySelector("body");
@@ -34,7 +26,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       loadScript(sender, sendResponse);
       break;
     case "removeScript":
-      console.log("remove script called");
+      removeScript(sender, sendResponse);
       break;
     default:
       sendResponse({ success: false, error: "unknown message type" });
@@ -45,7 +37,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 async function loadScript(sender, sendResponse) {
   try {
-    const tabId = await getTabId();
     const tabList = await getAllTabs();
 
     // JS + CSS injection
@@ -59,7 +50,7 @@ async function loadScript(sender, sendResponse) {
       () => {
         chrome.scripting
           .executeScript({
-            target: { tabId: tabId },
+            target: { tabId: sender.tab.id },
             func: tabScript,
             args: [tabList],
           })
@@ -67,6 +58,23 @@ async function loadScript(sender, sendResponse) {
       },
     );
     sendResponse({ success: true });
+  } catch (error) {
+    sendResponse({ success: false, error: error.message });
+  }
+}
+
+async function removeScript(sender, sendResponse) {
+  try {
+    console.log(sender);
+    chrome.scripting.removeCSS(
+      {
+        target: {
+          tabId: sender.tab.id,
+        },
+        files: ["assets/styles.css"],
+      },
+      () => console.log("CSS Removed"),
+    );
   } catch (error) {
     sendResponse({ success: false, error: error.message });
   }
