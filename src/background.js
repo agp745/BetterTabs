@@ -43,7 +43,7 @@ async function loadScript(sender, sendResponse) {
     chrome.scripting.insertCSS(
       {
         target: {
-          tabId: tabId,
+          tabId: sender.tab.id,
         },
         files: ["assets/styles.css"],
       },

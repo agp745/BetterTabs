@@ -2,11 +2,11 @@ const body = document.querySelector("body");
 
 function loadScript() {
   chrome.runtime.sendMessage({ action: "loadScript" }, (response) => {
-    if (response && !response.success) {
+    if (!response.success) {
       console.log(response.error);
-    } else {
-      console.log("script loaded successfully");
+      return;
     }
+    console.log("script loaded successfully");
   });
 }
 
