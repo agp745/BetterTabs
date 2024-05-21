@@ -11,13 +11,19 @@ function loadScript() {
 }
 
 function removeScript() {
+  const tabsBody = document.querySelector("#__TABS_Body");
+
+  if (tabsBody) {
+    tabsBody.remove();
+  } else {
+    console.error("__TABS_Body is not found");
+  }
+
   chrome.runtime.sendMessage({ action: "removeScript" }, (response) => {
-    if (response && !response.success) {
+    if (!response.success) {
       console.log(response.error);
       return;
     }
-
-    console.log("removed script successfully");
   });
 }
 
@@ -25,9 +31,22 @@ body.addEventListener("keydown", (e) => {
   if (e.ctrlKey && e.key === "n") {
     loadScript();
   }
+  if (e.key === "n") {
+    console.log("NEXT");
+  }
+  if (e.key === "b") {
+    console.log("BACK");
+  }
   if (e.key === "Escape") {
     removeScript();
   }
 
   console.log(e);
+});
+
+// currently just removes BUT NEEDS TO SELECT
+body.addEventListener("keyup", (e) => {
+  if (e.key === "Control") {
+    removeScript();
+  }
 });
