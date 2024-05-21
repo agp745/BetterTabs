@@ -1,6 +1,10 @@
 const body = document.querySelector("body");
 
+let ctrlHeld = false;
+let isScriptLoaded = false;
+
 function loadScript() {
+  isScriptLoaded = true;
   chrome.runtime.sendMessage({ action: "loadScript" }, (response) => {
     if (!response.success) {
       console.log(response.error);
@@ -11,6 +15,7 @@ function loadScript() {
 }
 
 function removeScript() {
+  isScriptLoaded = false;
   const tabsBody = document.querySelector("#__TABS_Body");
 
   if (tabsBody) {
@@ -28,25 +33,31 @@ function removeScript() {
 }
 
 body.addEventListener("keydown", (e) => {
-  if (e.ctrlKey && e.key === "n") {
-    loadScript();
-  }
-  if (e.key === "n") {
-    console.log("NEXT");
-  }
-  if (e.key === "b") {
-    console.log("BACK");
-  }
-  if (e.key === "Escape") {
-    removeScript();
+  if (e.ctrlKey) {
+    ctrlHeld = true;
   }
 
-  console.log(e);
+  if (ctrlHeld && e.key === "n") {
+    if (!isScriptLoaded) {
+      loadScript();
+    } else {
+      console.log("NEXT");
+    }
+  }
+  if (ctrlHeld && e.key === "b" && isScriptLoaded) {
+    console.log("BACK");
+  }
+  if (ctrlHeld && e.key === "Escape" && isScriptLoaded) {
+    console.log("escaped");
+    removeScript();
+  }
 });
 
 // currently just removes BUT NEEDS TO SELECT
 body.addEventListener("keyup", (e) => {
   if (e.key === "Control") {
+    ctrlHeld = false;
+    console.log("SELECTED");
     removeScript();
   }
 });
