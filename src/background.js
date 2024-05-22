@@ -8,10 +8,7 @@ async function getAllTabs() {
   }
 
   const list = tabsLRU.map((tab, idx) => {
-    // if (idx === 0) {
-    //   return `<div id="__TABS_Tab" data-tabId="${tab.id}" data-title="${tab.title}" class="__TABS_Focused">${tab.title}</div>`;
-    // }
-    return `<div id="__TABS_Tab" data-tabId="${tab.id}" data-title="${tab.title}" ${idx === 0 ? 'class="__TABS_Focused"' : ""}>${tab.title}</div>`;
+    return `<div id="__TABS_Tab" data-tabId="${tab.id}" data-title="${tab.title}" ${idx === 1 ? 'class="__TABS_Focused"' : ""}>${tab.title}</div>`;
   });
 
   return list.join("");

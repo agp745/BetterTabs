@@ -4,7 +4,7 @@ let ctrlHeld = false;
 let isScriptLoaded = false;
 
 function loadScript() {
-  curr = 0;
+  curr = 1; //??????//
   isScriptLoaded = true;
   chrome.runtime.sendMessage({ action: "loadScript" }, (response) => {
     if (!response.success) {
@@ -34,9 +34,12 @@ function removeScript() {
 }
 
 // direction: "next" | "back"
-let curr = 0;
+let curr = 1;
 function navigateTabs(direction) {
   const tabList = document.querySelectorAll("#__TABS_Tab");
+  // if (tabList.length > 1) {
+  //   curr = 1;
+  // }
   tabList[curr].classList.remove("__TABS_Focused");
 
   switch (direction) {
