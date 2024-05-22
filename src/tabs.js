@@ -4,7 +4,7 @@ let ctrlHeld = false;
 let isScriptLoaded = false;
 
 function loadScript() {
-  curr = 1; //??????//
+  curr = 1;
   isScriptLoaded = true;
   chrome.runtime.sendMessage({ action: "loadScript" }, (response) => {
     if (!response.success) {
@@ -37,9 +37,6 @@ function removeScript() {
 let curr = 1;
 function navigateTabs(direction) {
   const tabList = document.querySelectorAll("#__TABS_Tab");
-  // if (tabList.length > 1) {
-  //   curr = 1;
-  // }
   tabList[curr].classList.remove("__TABS_Focused");
 
   switch (direction) {
@@ -64,8 +61,6 @@ function navigateTabs(direction) {
     default:
       console.error("unexpected direction input");
   }
-
-  console.log(direction, curr);
 }
 
 function selectTab() {
@@ -105,11 +100,9 @@ body.addEventListener("keydown", (e) => {
   }
 });
 
-// currently just removes BUT NEEDS TO SELECT
 body.addEventListener("keyup", (e) => {
   if (e.key === "Control") {
     ctrlHeld = false;
-    console.log("SELECTED");
     selectTab();
     removeScript();
   }
