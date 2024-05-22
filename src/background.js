@@ -37,6 +37,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case "removeScript":
       removeScript(sender, sendResponse);
       break;
+    case "navigate":
+      console.log("API HIT");
+      navigateToTab(sendResponse, request.payload);
+      break;
     default:
       sendResponse({ success: false, error: "unknown message type" });
   }
@@ -74,7 +78,6 @@ async function injectScript(sender, sendResponse) {
 
 async function removeScript(sender, sendResponse) {
   try {
-    console.log(sender);
     chrome.scripting.removeCSS(
       {
         target: {
@@ -86,5 +89,22 @@ async function removeScript(sender, sendResponse) {
     );
   } catch (error) {
     sendResponse({ success: false, error: error.message });
+  }
+}
+
+function navigateToTab(sendResponse, tabId) {
+  try {
+    chrome.tabs.update(tabId, { active: true }, () => {
+      if (chrome.runtime.lastError) {
+        sendResponse({
+          success: false,
+          error: chrome.runtime.lastError.message,
+        });
+        return;
+      }
+      sendResponse({ success: true });
+    });
+  } catch (error) {
+    console.error(error);
   }
 }

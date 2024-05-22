@@ -65,6 +65,22 @@ function navigateTabs(direction) {
   console.log(direction, curr);
 }
 
+function selectTab() {
+  const focusedDiv = document.querySelector(".__TABS_Focused");
+  console.log(focusedDiv.dataset);
+
+  chrome.runtime.sendMessage(
+    { action: "navigate", payload: Number(focusedDiv.dataset.tabid) },
+    (response) => {
+      if (!response.success) {
+        console.error(response.error);
+        return;
+      }
+      console.log(`navigated to ${focusedDiv.dataset.tabid}`);
+    },
+  );
+}
+
 body.addEventListener("keydown", (e) => {
   if (e.ctrlKey) {
     ctrlHeld = true;
@@ -91,6 +107,7 @@ body.addEventListener("keyup", (e) => {
   if (e.key === "Control") {
     ctrlHeld = false;
     console.log("SELECTED");
+    selectTab();
     removeScript();
   }
 });
