@@ -1,15 +1,3 @@
-.body {
-  background-color: transparent;
-}
-
-.main {
-  display: flex;
-  min-width: 10rem;
-
-  background-color: cyan;
-  border-radius: 0.25rem;
-}
-
 #__TABS_Body {
   position: fixed;
   left: 0;
@@ -45,6 +33,10 @@
 }
 
 #__TABS_Tab:hover {
-  background-color: blue;
   cursor: pointer;
+}
+
+#__TABS_Tab.__TABS_Focused {
+  background-color: blue;
+  color: violet;
 }

@@ -1,8 +1,17 @@
 async function getAllTabs() {
   const tabs = await chrome.tabs.query({ currentWindow: true });
 
-  const list = tabs.map((tab) => {
-    return `<div id="__TABS_Tab">${tab.title}</div>`;
+  let tabsLRU = tabs.sort((a, b) => b.lastAccessed - a.lastAccessed);
+
+  if (tabsLRU.length > 5) {
+    tabsLRU.splice(5);
+  }
+
+  const list = tabsLRU.map((tab, idx) => {
+    // if (idx === 0) {
+    //   return `<div id="__TABS_Tab" data-tabId="${tab.id}" data-title="${tab.title}" class="__TABS_Focused">${tab.title}</div>`;
+    // }
+    return `<div id="__TABS_Tab" data-tabId="${tab.id}" data-title="${tab.title}" ${idx === 0 ? 'class="__TABS_Focused"' : ""}>${tab.title}</div>`;
   });
 
   return list.join("");
@@ -23,7 +32,7 @@ async function tabScript(tabList) {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.action) {
     case "loadScript":
-      loadScript(sender, sendResponse);
+      injectScript(sender, sendResponse);
       break;
     case "removeScript":
       removeScript(sender, sendResponse);
@@ -35,7 +44,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true;
 });
 
-async function loadScript(sender, sendResponse) {
+async function injectScript(sender, sendResponse) {
   try {
     const tabList = await getAllTabs();
 
