@@ -2,6 +2,10 @@ async function getAllTabs() {
   const tabs = await chrome.tabs.query({ currentWindow: true });
 
   let tabsLRU = tabs.sort((a, b) => b.lastAccessed - a.lastAccessed);
+  tabsLRU = tabsLRU.filter((tab) => !tab.url.startsWith("chrome://"));
+  for (const tab of tabsLRU) {
+    console.log(tab.url);
+  }
 
   if (tabsLRU.length > 5) {
     tabsLRU.splice(5);
