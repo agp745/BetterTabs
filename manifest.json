@@ -26,6 +26,6 @@
     }
   ],
 
-  "permissions": ["tabs", "activeTab", "scripting"],
+  "permissions": ["tabs", "activeTab", "scripting", "search"],
   "host_permissions": ["<all_urls>"]
 }

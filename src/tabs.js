@@ -1,7 +1,8 @@
 const body = document.querySelector("body");
 
-let ctrlHeld = false;
+let isCtrlHeld = false;
 let isScriptLoaded = false;
+let isSearchBarLoaded = false;
 
 function loadScript() {
   curr = 1;
@@ -81,29 +82,89 @@ function selectTab() {
 
 body.addEventListener("keydown", (e) => {
   if (e.ctrlKey) {
-    ctrlHeld = true;
+    isCtrlHeld = true;
   }
 
-  if (ctrlHeld && e.key === "n") {
+  if (isCtrlHeld && e.key === "n") {
     if (!isScriptLoaded) {
       loadScript();
     } else {
       navigateTabs("next");
     }
   }
-  if (ctrlHeld && e.key === "b" && isScriptLoaded) {
+  if (isCtrlHeld && e.key === "b" && isScriptLoaded) {
     navigateTabs("back");
   }
-  if (ctrlHeld && e.key === "Escape" && isScriptLoaded) {
+  if (isCtrlHeld && e.key === "Escape" && isScriptLoaded) {
     console.log("escaped");
     removeScript();
   }
 });
 
 body.addEventListener("keyup", (e) => {
-  if (e.key === "Control") {
-    ctrlHeld = false;
+  if (e.key === "Control" && isScriptLoaded) {
+    isCtrlHeld = false;
     selectTab();
     removeScript();
   }
+});
+
+//------------ New Tab Search Functionality
+
+function search(value) {
+  chrome.runtime.sendMessage(
+    { action: "search", payload: value },
+    (response) => {
+      if (!response.success) {
+        console.error(response.error);
+        return;
+      }
+      console.log("search api hit");
+    },
+  );
+}
+
+function showSearchBar() {
+  chrome.runtime.sendMessage({ action: "showSearchBar" }, (response) => {
+    if (!response.success) {
+      console.log(response.error);
+      return;
+    }
+    isSearchBarLoaded = true;
+    isCtrlHeld = false;
+  });
+}
+
+body.addEventListener("keydown", (e) => {
+  if (!isSearchBarLoaded) {
+    if (e.ctrlKey && e.key === "t") {
+      showSearchBar();
+    }
+  }
+  if (e.key === "Escape") {
+    isSearchBarLoaded = false;
+    removeScript();
+  }
+});
+
+// Observer is used because I have to capture the input from
+// the "client" and send it to the "server"/background for
+// query to properly work. Therefore, I have to observe
+// the DOM to check when the searchbar is mounted.
+const observer = new MutationObserver((_, obs) => {
+  if (isSearchBarLoaded) {
+    const searchBarInput = document.querySelector("#__TABS_SearchBar");
+    searchBarInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        console.log(searchBarInput.value);
+        search(searchBarInput.value);
+      }
+    });
+    obs.disconnect();
+  }
+});
+
+observer.observe(document, {
+  childList: true,
+  subtree: true,
 });
