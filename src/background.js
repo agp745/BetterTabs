@@ -1,21 +1,38 @@
+// images: Map<tabId, dataURL>
+const images = new Map();
+
 async function getAllTabs() {
   const tabs = await chrome.tabs.query({ currentWindow: true });
 
   let tabsLRU = tabs.sort((a, b) => b.lastAccessed - a.lastAccessed);
   tabsLRU = tabsLRU.filter((tab) => !tab.url.startsWith("chrome://"));
-  for (const tab of tabsLRU) {
-    console.log(tab.url);
-  }
 
   if (tabsLRU.length > 5) {
     tabsLRU.splice(5);
   }
 
   const list = tabsLRU.map((tab, idx) => {
-    return `<div id="__TABS_Tab" data-tabId="${tab.id}" data-title="${tab.title}" ${idx === 1 ? 'class="__TABS_Focused"' : ""}>${tab.title}</div>`;
+    return `
+<div id="__TABS_Tab" data-tabId="${tab.id}" data-title="${tab.title}" ${idx === 1 ? 'class="__TABS_Focused"' : ""}>
+  <img class="__TABS_TabImg" src="${images[tab.id]}"/>
+  <p>${tab.title}</p>
+</div>`;
   });
 
   return list.join("");
+}
+
+async function captureTabImage(sender, sendResponse) {
+  try {
+    const img = await chrome.tabs.captureVisibleTab({
+      format: "jpeg",
+      quality: 80,
+    });
+    images[sender.tab.id] = img;
+    sendResponse({ success: true });
+  } catch (error) {
+    sendResponse({ success: false, error: error });
+  }
 }
 
 //Generates HTML
@@ -35,15 +52,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case "loadScript":
       injectScript(sender, sendResponse);
       break;
+    case "captureImage":
+      captureTabImage(sender, sendResponse);
+      break;
     case "removeScript":
       removeScript(sender, sendResponse);
       break;
     case "navigate":
-      console.log("API HIT");
       navigateToTab(sendResponse, request.payload);
       break;
     case "showSearchBar":
-      console.log("search bar active");
       injectSearchBar(sender, sendResponse);
       break;
     case "search":
@@ -58,7 +76,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 async function injectScript(sender, sendResponse) {
   try {
+    // const imageDataUrl = await captureTabImage();
     const tabList = await getAllTabs();
+
+    // images[sender.tab.id] = imageDataUrl;
+    // console.log(images);
 
     // JS + CSS injection
     chrome.scripting.insertCSS(
@@ -75,7 +97,7 @@ async function injectScript(sender, sendResponse) {
             func: tabScript,
             args: [tabList],
           })
-          .then(() => console.log("script loaded successfully\n", sender));
+          .then(() => console.log("script loaded successfully"));
       },
     );
     sendResponse({ success: true });

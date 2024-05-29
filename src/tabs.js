@@ -109,6 +109,14 @@ body.addEventListener("keyup", (e) => {
   }
 });
 
+chrome.runtime.sendMessage({ action: "captureImage" }, (response) => {
+  if (!response.success) {
+    console.error(response.error);
+    return;
+  }
+  console.log("tab image captured");
+});
+
 //------------ New Tab Search Functionality
 
 function search(value) {
@@ -119,6 +127,7 @@ function search(value) {
         console.error(response.error);
         return;
       }
+      removeScript();
       console.log("search api hit");
     },
   );
