@@ -28,6 +28,8 @@
   border-width: 2px;
   border-radius: 0.25rem;
   padding: 0.5rem;
+
+  box-shadow: 0 25px 50px -12px rgb(216 67 255 / 0.5);
 }
 
 #__TABS_Tab {
