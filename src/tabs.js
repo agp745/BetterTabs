@@ -173,16 +173,16 @@ const observer = new MutationObserver((_, obs) => {
   }
 
   // IS THIS WORKING?!?!?!
-  if (isScriptLoaded) {
-    chrome.runtime.sendMessage({ action: "captureImage" }, (response) => {
-      if (!response.success) {
-        console.error(response.error);
-        return;
-      }
-      console.log("tab image captured on script activation");
-    });
-    obs.disconnect();
-  }
+  // if (isScriptLoaded) {
+  //   chrome.runtime.sendMessage({ action: "captureImage" }, (response) => {
+  //     if (!response.success) {
+  //       console.error(response.error);
+  //       return;
+  //     }
+  //     console.log("tab image captured on script activation");
+  //   });
+  //   obs.disconnect();
+  // }
 });
 
 observer.observe(document, {

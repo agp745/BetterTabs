@@ -12,10 +12,20 @@ async function getAllTabs() {
   }
 
   const list = tabsLRU.map((tab, idx) => {
+    let className = "";
+    if ((tabsLRU.length > 1 && idx === 1) || tabsLRU.length === 1) {
+      className = "__TABS_Focused";
+    }
+
     return `
-<div id="__TABS_Tab" data-tabId="${tab.id}" data-title="${tab.title}" ${idx === 1 ? 'class="__TABS_Focused"' : ""}>
-  <img class="__TABS_TabImg" src="${images[tab.id]}"/>
-  <p>${tab.title}</p>
+<div id="__TABS_Tab" data-tabId="${tab.id}" data-title="${tab.title}" class="${className}"}>
+  <section class="__TABS_ImgContainer">
+    <img class="__TABS_TabImg" src="${images[tab.id]}"/>
+  </section>
+  <section class="__TABS_InfoContainer">
+    <img src="${tab.favIconUrl}" class="__TABS_Favicon"/>
+    <p class="__TABS_Title">${tab.title}</p>
+  </section>
 </div>`;
   });
 
