@@ -29,6 +29,7 @@ async function captureTabImage(sender, sendResponse) {
       quality: 80,
     });
     images[sender.tab.id] = img;
+
     sendResponse({ success: true });
   } catch (error) {
     sendResponse({ success: false, error: error });
@@ -50,7 +51,9 @@ async function tabScript(tabList) {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.action) {
     case "loadScript":
-      injectScript(sender, sendResponse);
+      captureTabImage(sender, sendResponse).then(() =>
+        injectScript(sender, sendResponse),
+      );
       break;
     case "captureImage":
       captureTabImage(sender, sendResponse);
@@ -76,11 +79,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 async function injectScript(sender, sendResponse) {
   try {
-    // const imageDataUrl = await captureTabImage();
     const tabList = await getAllTabs();
-
-    // images[sender.tab.id] = imageDataUrl;
-    // console.log(images);
 
     // JS + CSS injection
     chrome.scripting.insertCSS(
