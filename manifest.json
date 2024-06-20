@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "BetterTabs",
   "description": "Enables 'mac-like' tab switching chrome for a better work flow",
-  "version": "0.1",
+  "version": "0.2",
   "icons": {
     "16": "assets/arc-icon-16.png",
     "32": "assets/arc-icon-32.png",

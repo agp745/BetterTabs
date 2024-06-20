@@ -1,4 +1,6 @@
 #__TABS_Body {
+  font-family: monospace;
+
   position: fixed;
   left: 0;
   top: 0;
@@ -21,24 +23,33 @@
   gap: 0.5rem;
 
   max-width: 75%;
+  /* width: 16rem; */
 
   background-color: rgba(14, 14, 14, 0.98);
-  border-color: #fefefe;
+  border-color: rgb(31, 35, 40) !important;
   border: solid;
   border-width: 2px;
   border-radius: 0.25rem;
   padding: 0.5rem;
 
-  box-shadow: 0 25px 50px -12px rgb(216 67 255 / 0.5);
+  /* 2xl */
+  /* box-shadow: 0 25px 50px -12px rgb(216 67 255 / 0.5); */
+
+  /* xl */
+  box-shadow:
+    0 20px 25px -5px rgb(81 27 252 / 0.2),
+    0 8px 10px -6px rgb(81 27 252 / 0.2);
 }
 
 #__TABS_Tab {
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  padding: 0.5rem;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+
+  /* width: 100% !important; */
+  width: 16rem;
+  padding: 0.5rem !important;
 }
 
 #__TABS_Tab:hover {
@@ -49,7 +60,7 @@
   /* having padding here will change sizes of div */
   /* padding: 0.5rem; */
   border-radius: 0.5rem;
-  background-color: blue;
+  background-color: rgba(8, 169, 202, 1);
   color: violet;
 }
 
@@ -69,9 +80,8 @@
 
 .__TABS_InfoContainer {
   display: flex;
-  /* justify-content: center; */
-  /* align-items: center; */
   gap: 0.5rem;
+  padding-top: 0.2rem;
 }
 
 .__TABS_Favicon {
@@ -83,8 +93,8 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  /* width: 100%; */
   max-width: 100%;
-  /* box-sizing: border-box; */
   color: #fefefe;
+
+  margin: 0 !important;
 }

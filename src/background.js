@@ -42,13 +42,14 @@ async function captureTabImage(sender, sendResponse) {
 
     sendResponse({ success: true });
   } catch (error) {
-    sendResponse({ success: false, error: error });
+    sendResponse({ success: false, error: error.message });
   }
 }
 
 //Generates HTML
 async function tabScript(tabList) {
   const body = document.querySelector("body");
+
   const tabMenuContainer = `
 <main id="__TABS_Body">
   <section id="__TABS_List">${tabList}</section>

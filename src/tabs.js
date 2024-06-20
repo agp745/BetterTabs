@@ -147,7 +147,7 @@ function showSearchBar() {
 body.addEventListener("keydown", (e) => {
   if (!isSearchBarLoaded) {
     if (e.ctrlKey && e.key === "t") {
-      showSearchBar();
+      // showSearchBar();
     }
   }
   if (e.key === "Escape") {
@@ -171,18 +171,6 @@ const observer = new MutationObserver((_, obs) => {
     });
     obs.disconnect();
   }
-
-  // IS THIS WORKING?!?!?!
-  // if (isScriptLoaded) {
-  //   chrome.runtime.sendMessage({ action: "captureImage" }, (response) => {
-  //     if (!response.success) {
-  //       console.error(response.error);
-  //       return;
-  //     }
-  //     console.log("tab image captured on script activation");
-  //   });
-  //   obs.disconnect();
-  // }
 });
 
 observer.observe(document, {
